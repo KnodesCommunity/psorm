@@ -27,10 +27,5 @@ export type IncludeEntity<T, TPopulation extends PopulationRecord | true> =
 
 export const include = <T, TProps>( getter: IncludeProxyCb<IQueryContext.GetOutput<T>, TProps> ): PostProcessFn<
 	T,
-	T extends IQueryContext<infer TEntity, infer TNum, infer TOut, infer TNul> ?
-		IQueryContext<
-			TEntity,
-			TNum,
-			IncludeEntity<TOut, Included<TProps>>,
-			TNul> :
-		never> => notImplemented;
+	Override<T, {output: IncludeEntity<IQueryContext.GetOutput<T>, Included<TProps>>}>
+> => notImplemented;
