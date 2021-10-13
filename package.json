@@ -1,0 +1,56 @@
+{
+  "name": "@scitizen/psorm",
+  "version": "0.0.0",
+  "description": "Experimental FP ORM",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Scitizen/psorm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Scitizen/psorm/issues"
+  },
+  "homepage": "https://github.com/Scitizen/psorm#readme",
+  "author": "GerkinDev",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "format:pkg": "format-package --write",
+    "lint": "eslint '{.,{src,tests}/**}/*.{j,t}s' --cache",
+    "precommit": "npm run lint && npm run test:unit -- --only-changed && npm run test:integration -- --only-changed && npm run test:e2e -- --only-changed && npm run build",
+    "prepare": "husky install",
+    "release": "standard-version",
+    "test:e2e": "jest --config jest.e2e.config.js --pass-with-no-tests",
+    "test:integration": "jest --config jest.integration.config.js --pass-with-no-tests",
+    "test:unit": "jest --config jest.unit.config.js --pass-with-no-tests"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "dependencies": {
+    "type-fest": "^2.5.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^13.2.1",
+    "@commitlint/config-conventional": "^13.2.0",
+    "@scitizen/eslint-config": "^1.5.1",
+    "@types/jest": "^27.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-import": "^2.25.1",
+    "eslint-plugin-jsdoc": "^36.1.1",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-rxjs": "^3.3.7",
+    "eslint-plugin-sort-export-all": "^1.1.1",
+    "expect-type": "^0.12.0",
+    "format-package": "^6.1.0",
+    "husky": "^7.0.2",
+    "jest": "^27.2.5",
+    "jest-extended": "^1.0.0",
+    "standard-version": "^9.3.1",
+    "ts-jest": "^27.0.5",
+    "typescript": "^4.4.3"
+  }
+}

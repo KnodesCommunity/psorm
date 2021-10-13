@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.build.json",
+    "compilerOptions": {
+        "types": [
+            "jest",
+            "jest-extended"
+        ]
+    },
+    "include": [
+        "src/**/*.ts",
+        "**/*.spec.ts"
+    ],
+    "exclude": []
+}
