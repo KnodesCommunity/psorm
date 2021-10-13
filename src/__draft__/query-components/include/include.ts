@@ -1,5 +1,3 @@
-import { Opaque } from 'type-fest';
-
 import { RelatedType, Relation } from '../../relations';
 import { notImplemented } from '../../utils';
 import { IncludeQuery } from './types';

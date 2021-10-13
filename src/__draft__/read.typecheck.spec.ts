@@ -2,11 +2,10 @@ import { expectTypeOf } from 'expect-type';
 import { PromiseValue } from 'type-fest';
 
 import { orFail } from './plugins/or-fail';
-
-import { using } from './plugins/using';
 import { withPrevNext } from './plugins/with-prev-next';
 
 import { include } from './query-components/include/include';
+import { multiple } from './query-components/numerable/multiple';
 import { single } from './query-components/numerable/single';
 import { from } from './query-components/source/from';
 import { Context } from './query-components/source/types';
@@ -30,7 +29,6 @@ describe( 'read', () => {
 	describe( 'Typecheck', () => {
 		describe( 'Simple query', () => {
 			it( 'should match correct type for single', () => {
-				// const readQuery1 = read`single ${TestEntity} from ${context} where ${{$id: 42}}`;
 				const readQuery1 = read(
 					single( TestEntitySimple ),
 					from( context ) );
@@ -75,7 +73,6 @@ describe( 'read', () => {
 					expectTypeOf<Result3['relations']>().toEqualTypeOf<TestEntitySimple[]>();
 				} );
 				it( 'should match correct type for single deep', () => {
-					// const readQuery1 = read`single ${TestEntity} from ${context} where ${{$id: 42}}`;
 					const readQuery1 = read(
 						single( TestEntityWithRelationDeep ),
 						from( context ),
@@ -90,19 +87,48 @@ describe( 'read', () => {
 		} );
 		describe( 'Plugins', () => {
 			describe( 'withPrevNext', () => {
-				it( 'simple', () => {
-					const readQuery = read( single( TestEntitySimple ), from( context ), using( withPrevNext() ) );
-					expectTypeOf( readQuery ).toEqualTypeOf<Promise<{current: TestEntitySimple; prev?: TestEntitySimple; next?: TestEntitySimple} | null>>();
+				describe( 'single', () => {
+					it( 'simple', () => {
+						const readQuery = read( single( TestEntitySimple ), from( context ), withPrevNext() );
+						expectTypeOf( readQuery ).toEqualTypeOf<Promise<{current: TestEntitySimple; prev?: TestEntitySimple; next?: TestEntitySimple} | null>>();
+						expectTypeOf( readQuery ).not.toBeAny();
+					} );
+					it.todo( 'With population from main query' );
+					it.todo( 'With population from withPrevNext' );
+				} );
+			} );
+			describe( 'multiple', () => {
+				it( 'should not be allowed', () => {
+					const readQuery = read( multiple( TestEntitySimple ), from( context ), withPrevNext() );
+					expectTypeOf( readQuery ).toEqualTypeOf<Promise<never>>();
 					expectTypeOf( readQuery ).not.toBeAny();
 				} );
-				it.todo( 'With population from main query' );
-				it.todo( 'With population from withPrevNext' );
 			} );
 			describe( 'orFail', () => {
-				it( 'simple', () => {
-					const readQuery = read( single( TestEntitySimple ), from( context ), using( orFail() ) );
-					expectTypeOf( readQuery ).toEqualTypeOf<Promise<TestEntitySimple>>();
+				describe( 'single', () => {
+					it( 'simple', () => {
+						const readQuery = read( single( TestEntitySimple ), from( context ), orFail() );
+						expectTypeOf( readQuery ).toEqualTypeOf<Promise<TestEntitySimple>>();
+						expectTypeOf( readQuery ).not.toBeAny();
+					} );
+				} );
+			} );
+			describe( 'multiple', () => {
+				it( 'should not be allowed', () => {
+					const readQuery = read( multiple( TestEntitySimple ), from( context ), orFail() );
+					expectTypeOf( readQuery ).toEqualTypeOf<Promise<never>>();
 					expectTypeOf( readQuery ).not.toBeAny();
+				} );
+			} );
+			describe( 'withPrevNext & orFail', () => {
+				it( 'simple', () => {
+					const readQuery1 = read( single( TestEntitySimple ), from( context ), withPrevNext(), orFail() );
+					expectTypeOf( readQuery1 ).toEqualTypeOf<Promise<{current: TestEntitySimple; prev?: TestEntitySimple; next?: TestEntitySimple}>>();
+					expectTypeOf( readQuery1 ).not.toBeAny();
+
+					const readQuery2 = read( single( TestEntitySimple ), from( context ), orFail(), withPrevNext() );
+					expectTypeOf( readQuery2 ).toEqualTypeOf<Promise<{current: TestEntitySimple; prev?: TestEntitySimple; next?: TestEntitySimple}>>();
+					expectTypeOf( readQuery2 ).not.toBeAny();
 				} );
 			} );
 		} );

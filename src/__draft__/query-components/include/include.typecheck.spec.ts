@@ -1,10 +1,9 @@
 import { expectTypeOf } from 'expect-type';
-import { Class, PromiseValue } from 'type-fest';
+import { Class } from 'type-fest';
 
 import { ToMany, ToOne } from '../../relations';
-import { NumerableEntity } from '../numerable/types';
 import { include } from './include';
-import { IncludeQuery, PopulationRecord } from './types';
+import { IncludeQuery } from './types';
 
 const wrap = <TClass, TPopulation>(
 	_entityType: Class<TClass>,
