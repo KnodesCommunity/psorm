@@ -35,11 +35,17 @@ describe( 'read', () => {
 				expectTypeOf( readQuery1 ).toEqualTypeOf<Promise<TestEntitySimple | null>>();
 				expectTypeOf( readQuery1 ).not.toBeAny();
 			} );
+			it( 'should match correct type for multiple', () => {
+				const readQuery1 = read(
+					multiple( TestEntitySimple ),
+					from( context ) );
+				expectTypeOf( readQuery1 ).toEqualTypeOf<Promise<TestEntitySimple[]>>();
+				expectTypeOf( readQuery1 ).not.toBeAny();
+			} );
 		} );
 		describe( 'Include query', () => {
 			describe( 'Single', () => {
 				it( 'should match correct type for single', () => {
-					// const readQuery1 = read`single ${TestEntity} from ${context} where ${{$id: 42}}`;
 					const readQuery1 = read(
 						single( TestEntityWithRelation ),
 						from( context ),

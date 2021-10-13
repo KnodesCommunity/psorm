@@ -1,13 +1,14 @@
 import { expectTypeOf } from 'expect-type';
 import { Class } from 'type-fest';
 
+import { IQueryContext, PostProcessFn } from '../../plugins/types';
 import { ToMany, ToOne } from '../../relations';
-import { include } from './include';
-import { IncludeQuery } from './types';
+import { ENumerable } from '../numerable/types';
+import { IncludeEntity, PopulationRecord, include } from './include';
 
-const wrap = <TClass, TPopulation>(
+const wrap = <TClass, TPopulation extends true | PopulationRecord>(
 	_entityType: Class<TClass>,
-	_include: IncludeQuery<TClass, TPopulation>,
+	_include: PostProcessFn<IQueryContext<TClass, ENumerable, TClass, false>, IQueryContext<TClass, ENumerable, IncludeEntity<TClass, TPopulation>, false>>,
 ): TPopulation => null as any;
 
 
