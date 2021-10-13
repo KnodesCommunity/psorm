@@ -20,17 +20,17 @@ export const read: {
 		targetContext: TargetContext<any>,
 		transform1: PostProcessFn<IQueryContext.FromNumeration<TNumeration>, TProcess1>,
 	): Promise<IQueryContext.ToOutput<TProcess1>>;
-	<TNumeration extends Numerable<any>, TProcess1, TProcess2>(
+	<TNumeration extends Numerable<any>, T1, TOut>(
 		output: TNumeration,
 		targetContext: TargetContext<any>,
-		transform1: PostProcessFn<IQueryContext.FromNumeration<TNumeration>, TProcess1>,
-		transform2: PostProcessFn<TProcess1, TProcess2>,
-	): Promise<IQueryContext.ToOutput<TProcess2>>;
-	<TNumeration extends Numerable<any>, TProcess1, TProcess2, TProcess3>(
+		transform1: PostProcessFn<IQueryContext.FromNumeration<TNumeration>, T1>,
+		transform2: PostProcessFn<T1, TOut>,
+	): Promise<IQueryContext.ToOutput<TOut>>;
+	<TNumeration extends Numerable<any>, T1, T2, TOut>(
 		output: TNumeration,
 		targetContext: TargetContext<any>,
-		transform1: PostProcessFn<IQueryContext.FromNumeration<TNumeration>, TProcess1>,
-		transform2: PostProcessFn<TProcess1, TProcess2>,
-		transform3: PostProcessFn<TProcess2, TProcess3>,
-	): Promise<IQueryContext.ToOutput<TProcess3>>;
+		transform1: PostProcessFn<IQueryContext.FromNumeration<TNumeration>, T1>,
+		transform2: PostProcessFn<T1, T2>,
+		transform3: PostProcessFn<T2, TOut>,
+	): Promise<IQueryContext.ToOutput<TOut>>;
 } = ( ...args: any[] ) => Promise.resolve( null as any );

@@ -1,6 +1,6 @@
 import { IQueryContext, PostProcessFn } from '../../plugins/types';
 import { NumeredRelatedMap, RelatedType, Relation } from '../../relations';
-import { OpaqueWrap, notImplemented, Override } from '../../utils';
+import { OpaqueWrap, Override, notImplemented } from '../../utils';
 
 declare const sym: unique symbol;
 type IncludeProps<T> = OpaqueWrap<T, typeof sym>
