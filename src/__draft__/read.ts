@@ -33,4 +33,4 @@ export const read: {
 		transform2: PostProcessFn<T1, T2>,
 		transform3: PostProcessFn<T2, TOut>,
 	): Promise<IQueryContext.ToOutput<TOut>>;
-} = ( ...args: any[] ) => Promise.resolve( null as any );
+} = ( ..._args: any[] ) => Promise.resolve( null as any );
