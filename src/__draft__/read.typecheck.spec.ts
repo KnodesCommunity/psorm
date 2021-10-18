@@ -1,10 +1,10 @@
 import { expectTypeOf } from 'expect-type';
 import { PromiseValue } from 'type-fest';
 
+import { include } from './plugins/include/include';
 import { orFail } from './plugins/or-fail';
 import { withPrevNext } from './plugins/with-prev-next';
 
-import { include } from './query-components/include/include';
 import { multiple } from './query-components/numerable/multiple';
 import { single } from './query-components/numerable/single';
 import { from } from './query-components/source/from';

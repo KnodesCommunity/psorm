@@ -5,7 +5,7 @@ export const enum ENumerable {
 	MULTIPLE
 }
 interface INumerableBase<T> {
-	entity: Class<T>;
+	entityType: Class<T>;
 	numeration: ENumerable;
 }
 export interface INumerableSingle<T> extends INumerableBase<T> {

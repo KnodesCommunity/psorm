@@ -1,8 +1,8 @@
 import { Opaque } from 'type-fest';
 
-import { IQueryContext, PostProcessFn } from '../../plugins/types';
 import { NumeredRelatedMap, RelatedType, Relation } from '../../relations';
 import { OpaqueWrap, Override, notImplemented } from '../../utils';
+import { IQueryContext, QueryOperatorFn } from '../types';
 
 declare const DEFAULTSym: unique symbol;
 type DEFAULT = Opaque<Record<string, any>, typeof DEFAULTSym>;
@@ -23,22 +23,25 @@ type IncludeChain<T, TBase = unknown> =
 export type Included<TProps> = TProps extends IncludeProps<infer TIn> ? Readonly<TIn> : never
 type IncludeProxyCb<T, TProps> = ( entity: IncludeChain<T> ) => Readonly<TProps>
 
-export type PopulationRecord = {readonly [key: string]: true | PopulationRecord};
+export type IncludeRecord = {readonly [key: string]: true | IncludeRecord};
 
-type IncludeEntityProps<T, TPopulation extends PopulationRecord> = Override<
+type IncludeEntityProps<T, TPopulation extends IncludeRecord> = Override<
 	T,
 	{[key in ( keyof TPopulation & keyof T )]: NumeredRelatedMap<
 		T[key] extends Relation<any> ? T[key] : never,
 		IncludeEntity<
 			RelatedType<T[key]>,
 			TPopulation[key]>>}>
-export type IncludeEntity<T, TPopulation extends PopulationRecord | true> =
+export type IncludeEntity<T, TPopulation extends IncludeRecord | true> =
 	TPopulation extends true ? T : IncludeEntityProps<T, Exclude<TPopulation, true>>;
 
-export const include = <T, TProps>( _getter: IncludeProxyCb<IQueryContext.GetOutput<T>, TProps> ): PostProcessFn<
+export const include = <T, TProps>( getter: IncludeProxyCb<IQueryContext.GetOutput<T>, TProps> ): QueryOperatorFn<
 	T,
 	Override<T, {output: IncludeEntity<IQueryContext.GetOutput<T>, Included<TProps>>}>
-> => notImplemented;
+> => {
+	const includes = generateIncludeProxy( getter );
+	return notImplemented( includes );
+};
 
 export const generateIncludeProxy = <T = DEFAULT, TProps = any>( getter: IncludeProxyCb<T, TProps> ): TProps => {
 	const propsObj: any = { [includedPropsSym]: {}};

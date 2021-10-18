@@ -1,7 +1,6 @@
 import { ENumerable, Numerable, NumerableEntity, NumerableOutputType } from '../query-components/numerable/types';
 
-export type PostProcessFn<TIn, TOut> = ( arg: TIn ) => TOut;
-export type PostProcessFn2<TOut> = <TIn>( arg: TIn ) => TOut;
+export type QueryOperatorFn<TIn, TOut> = ( arg: TIn ) => TOut;
 
 export interface IQueryContext<
 	TEntity = unknown,
