@@ -13,8 +13,11 @@ module.exports = {
 	testPathIgnorePatterns: [
 		'node_modules',
 		'__tests__/helpers',
+		'coverage',
 	],
+	modulePathIgnorePatterns: [ '<rootDir>/coverage' ],
 	collectCoverage: true,
+	coverageDirectory: './coverage/unit',
 	collectCoverageFrom: [
 		'src/**/*.ts',
 		'!**/node_modules/**',

@@ -2,8 +2,8 @@ const baseConfig = require( './jest.config' );
 module.exports = {
 	...baseConfig,
 	testMatch: [
-		'**/tests/integration/**/*.[jt]s',
-		'!**/tests/integration/**/__*.[jt]s',
+		'**/__tests__/integration/**/*.[jt]s',
+		'!**/__tests__/integration/**/__*.[jt]s',
 	],
 	globals: {
 		...baseConfig.globals,
@@ -12,4 +12,13 @@ module.exports = {
 			tsconfig: './tsconfig.integration.json',
 		},
 	},
+	testPathIgnorePatterns: [
+		...baseConfig.testPathIgnorePatterns,
+		'src/.*\\.spec.ts',
+	],
+	coverageDirectory: './coverage/integration',
+	collectCoverageFrom: [
+		...baseConfig.collectCoverageFrom,
+		'!src/**/*.spec.ts',
+	],
 };
