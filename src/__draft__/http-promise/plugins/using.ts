@@ -1,4 +1,4 @@
-import { notImplemented } from '../utils';
+import { notImplemented } from '../../core/utils';
 import { QueryOperatorFn } from './types';
 
 export type QueryOperatorsChain<T extends any[] | [void]> = T extends [infer T1, infer T2, ...infer TNext] ?

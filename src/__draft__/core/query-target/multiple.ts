@@ -1,8 +1,9 @@
 import { Class } from 'type-fest';
 
-import { ENumerable, INumerableMultiple } from './types';
+import { ENumeration } from '../types';
+import { INumerableMultiple } from './types';
 
 export const multiple = <T>( entityType: Class<T> ): INumerableMultiple<T> => ( {
 	entityType,
-	numeration: ENumerable.MULTIPLE,
+	numeration: ENumeration.MULTIPLE,
 } );

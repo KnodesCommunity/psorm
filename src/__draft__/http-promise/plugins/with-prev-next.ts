@@ -1,11 +1,11 @@
-import { ENumerable } from '../query-components/numerable/types';
-import { Override, notImplemented } from '../utils';
+import { ENumeration } from '../../core/types';
+import { Override, notImplemented } from '../../core/utils';
 import { IQueryContext, QueryOperatorFn } from './types';
 
 type WithPrevNextCtx<T> = T extends IQueryContext<infer TEntity> ?
-	IQueryContext<TEntity, ENumerable.SINGLE, TEntity, true> :
+	IQueryContext<TEntity, ENumeration.SINGLE, TEntity, true> :
 	never;
-type WithPrevNext<TCurrent, TPrevNext> = IQueryContext.GetNumeration<TCurrent> extends ENumerable.SINGLE ?
+type WithPrevNext<TCurrent, TPrevNext> = IQueryContext.GetNumeration<TCurrent> extends ENumeration.SINGLE ?
 	Override<TCurrent, {output: {current: IQueryContext.GetOutput<TCurrent>; prev: IQueryContext.ToOutput<TPrevNext>; next: IQueryContext.ToOutput<TPrevNext>}}> :
 	never;
 export const withPrevNext: {

@@ -1,18 +1,28 @@
-import { ENumerable, Numerable, NumerableEntity, NumerableOutputType } from '../query-components/numerable/types';
+import { Class } from 'type-fest';
+
+import { Numerable, NumerableEntity, NumerableOutputType } from '../../core/query-target/types';
+import { ENumeration } from '../../core/types';
 
 export type QueryOperatorFn<TIn, TOut> = ( arg: TIn ) => TOut;
 
+declare const entityTypeSym: unique symbol;
 export interface IQueryContext<
 	TEntity = unknown,
-	TNumeration extends ENumerable = ENumerable,
+	TNumeration extends ENumeration = ENumeration,
 	TOutput = unknown,
 	TNullable = unknown> {
-	readonly entityType: TEntity;
+	readonly [entityTypeSym]?: TEntity;
+	readonly entityClass: Class<TEntity>;
 	readonly numeration: TNumeration;
 	readonly nullable: TNullable;
 	readonly output: TOutput;
+	readonly filter?: IQueryContext.Filter;
+	readonly options?: IQueryContext.Options;
 }
 export namespace IQueryContext {
+	export type Filter = unknown;
+	export type Options = {limit?: number; skip?: number};
+
 	export type FromNumeration<T extends Numerable<any>> = IQueryContext<
 		NumerableEntity<T>,
 		T['numeration'],
@@ -25,12 +35,12 @@ export namespace IQueryContext {
 	export type GetNullable<T> = T extends IQueryContext<any, any, any, infer TNullable> ? TNullable : never;
 
 	export type ToOutput<T> = T extends IQueryContext<any, infer TNum, infer TOut, infer TNul> ?
-		TNum extends ENumerable.SINGLE ?
+		TNum extends ENumeration.SINGLE ?
 			TNul extends true ?
 				TOut | null :
 				TNul extends false ? TOut :
 				never :
-			TNum extends ENumerable.MULTIPLE ?
+			TNum extends ENumeration.MULTIPLE ?
 				TOut[] :
 				never :
 		never;

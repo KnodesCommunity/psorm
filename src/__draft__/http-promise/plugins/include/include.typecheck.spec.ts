@@ -1,20 +1,20 @@
-import { Override } from '__draft__/utils';
 import { expectTypeOf } from 'expect-type';
 import { Class } from 'type-fest';
 
-import { ENumerable } from '../../query-components/numerable/types';
+import { ENumeration } from '../../../core/types';
+import { Override } from '../../../core/utils';
 import { ToMany, ToOne } from '../../relations';
 import { IQueryContext, QueryOperatorFn } from '../types';
 import { IncludeEntity, IncludeRecord, include } from './include';
 
 const wrapGetIncludes = <TClass, TPopulation extends true | IncludeRecord>(
 	_entityType: Class<TClass>,
-	_include: QueryOperatorFn<IQueryContext<TClass, ENumerable, TClass, false>, IQueryContext<TClass, ENumerable, IncludeEntity<TClass, TPopulation>, false>>,
+	_include: QueryOperatorFn<IQueryContext<TClass, ENumeration, TClass, false>, IQueryContext<TClass, ENumeration, IncludeEntity<TClass, TPopulation>, false>>,
 ): TPopulation => null as any;
 
 const wrapGetIncluded = <TClass, TPopulated>(
 	_entityType: Class<TClass>,
-	_include: QueryOperatorFn<IQueryContext<TClass, ENumerable, TClass, false>, IQueryContext<TClass, ENumerable, TPopulated, false>>,
+	_include: QueryOperatorFn<IQueryContext<TClass, ENumeration, TClass, false>, IQueryContext<TClass, ENumeration, TPopulated, false>>,
 ): TPopulated => null as any;
 
 

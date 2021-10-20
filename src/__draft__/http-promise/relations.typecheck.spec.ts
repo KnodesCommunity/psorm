@@ -1,7 +1,7 @@
 import { expectTypeOf } from 'expect-type';
 
+import { Override } from '../core/utils';
 import { ToOne } from './relations';
-import { Override } from './utils';
 
 describe( 'Relations', () => {
 	describe( 'Typecheck', () => {

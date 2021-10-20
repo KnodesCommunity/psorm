@@ -5,13 +5,13 @@ import { include } from './plugins/include/include';
 import { orFail } from './plugins/or-fail';
 import { withPrevNext } from './plugins/with-prev-next';
 
-import { multiple } from './query-components/numerable/multiple';
-import { single } from './query-components/numerable/single';
+import { multiple } from '../core/query-target/multiple';
+import { single } from '../core/query-target/single';
 import { from } from './query-components/source/from';
 import { Context } from './query-components/source/types';
 import { read } from './read';
 import { ToMany, ToOne } from './relations';
-import { Override } from './utils';
+import { Override } from '../core/utils';
 
 class SimpleEntity {
 	public foo!: string;

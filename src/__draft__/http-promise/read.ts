@@ -6,9 +6,9 @@
 //     query: any
 // ): Promise<T | null> => Promise.resolve(null);
 
+import { Numerable } from '../core/query-target/types';
 import { IQueryContext } from './plugins/types';
 import { QueryOperatorsChain } from './plugins/using';
-import { Numerable } from './query-components/numerable/types';
 import { TargetContext } from './query-components/source/types';
 
 export const read: {

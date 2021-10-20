@@ -9,14 +9,14 @@ module.exports = {
 		},
 	},
 	moduleFileExtensions: [ 'js', 'json', 'ts' ],
-	setupFilesAfterEnv: [ 'jest-extended' ],
+	setupFilesAfterEnv: [ 'jest-extended/all', './__tests__/helpers/custom-matchers/index.ts' ],
 	testPathIgnorePatterns: [
 		'node_modules',
 		'__tests__/helpers',
 	],
 	collectCoverage: true,
 	collectCoverageFrom: [
-		'src/**/*.{[jt]s}',
+		'src/**/*.ts',
 		'!**/node_modules/**',
 	],
 };

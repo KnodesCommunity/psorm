@@ -1,18 +1,16 @@
 import { Class } from 'type-fest';
 
-export const enum ENumerable {
-	SINGLE,
-	MULTIPLE
-}
+import { ENumeration } from '../types';
+
 interface INumerableBase<T> {
 	entityType: Class<T>;
-	numeration: ENumerable;
+	numeration: ENumeration;
 }
 export interface INumerableSingle<T> extends INumerableBase<T> {
-	numeration: ENumerable.SINGLE;
+	numeration: ENumeration.SINGLE;
 }
 export interface INumerableMultiple<T> extends INumerableBase<T> {
-	numeration: ENumerable.MULTIPLE;
+	numeration: ENumeration.MULTIPLE;
 }
 export type Numerable<T> = INumerableSingle<T> | INumerableMultiple<T>;
 export type NumerableEntity<T extends INumerableBase<any>> = T extends INumerableBase<infer TIn> ? TIn : never

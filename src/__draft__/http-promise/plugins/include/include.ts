@@ -1,7 +1,7 @@
 import { Opaque } from 'type-fest';
 
+import { OpaqueWrap, Override, notImplemented } from '../../../core/utils';
 import { NumeredRelatedMap, RelatedType, Relation } from '../../relations';
-import { OpaqueWrap, Override, notImplemented } from '../../utils';
 import { IQueryContext, QueryOperatorFn } from '../types';
 
 declare const DEFAULTSym: unique symbol;

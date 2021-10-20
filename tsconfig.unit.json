@@ -1,14 +1,16 @@
 {
     "extends": "./tsconfig.build.json",
     "compilerOptions": {
+        "composite": false,
         "types": [
             "jest",
-            "jest-extended"
+            "jest-extended",
         ]
     },
     "include": [
         "src/**/*.ts",
-        "**/*.spec.ts"
+        "**/*.spec.ts",
+        "types/test.d.ts"
     ],
     "exclude": []
 }
