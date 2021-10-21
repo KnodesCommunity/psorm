@@ -16,7 +16,7 @@ module.exports = {
 		'coverage',
 	],
 	modulePathIgnorePatterns: [ '<rootDir>/coverage' ],
-	collectCoverage: true,
+	collectCoverage: false,
 	coverageDirectory: './coverage/unit',
 	collectCoverageFrom: [
 		'src/**/*.ts',
