@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.unit.json",
+    "compilerOptions": {
+    },
+    "include": [
+        "src/**/*.ts",
+        "__tests__/integration/**/*.ts",
+        "__tests__/helpers/**/*.ts",
+        "../types/test.d.ts"
+    ],
+    "exclude": [
+        "src/**/*.spec.ts",
+    ]
+}

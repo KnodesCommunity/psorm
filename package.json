@@ -14,15 +14,15 @@
   "author": "GerkinDev",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p ./configs/tsconfig.build.json",
     "format:pkg": "format-package --write",
-    "lint": "eslint '{.,{src,tests}/**}/*.{j,t}s' --cache",
+    "lint": "eslint '{.,{src,tests}/**}/*.{j,t}s' --cache --config ./configs/.eslintrc.js",
     "precommit": "npm run lint && npm run test:unit -- --only-changed && npm run test:integration -- --only-changed && npm run test:e2e -- --only-changed && npm run build",
     "prepare": "husky install",
     "release": "standard-version",
-    "test:e2e": "jest --config jest.e2e.config.js --pass-with-no-tests",
-    "test:integration": "jest --config jest.integration.config.js --pass-with-no-tests",
-    "test:unit": "jest --config jest.unit.config.js --pass-with-no-tests"
+    "test:e2e": "jest --config ./configs/jest.e2e.config.js --pass-with-no-tests",
+    "test:integration": "jest --config ./configs/jest.integration.config.js --pass-with-no-tests",
+    "test:unit": "jest --config ./configs/jest.unit.config.js --pass-with-no-tests"
   },
   "commitlint": {
     "extends": [

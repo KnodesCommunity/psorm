@@ -1,6 +1,0 @@
-{
-    "extends": "./tsconfig.unit.json",
-    "compilerOptions": {
-    },
-    "exclude": []
-}

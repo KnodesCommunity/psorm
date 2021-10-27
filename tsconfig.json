@@ -1,8 +1,8 @@
 {
     "references": [
-        {"path": "./tsconfig.build.json"},
-        {"path": "./tsconfig.unit.json"},
-        {"path": "./tsconfig.integration.json"},
-        {"path": "./tsconfig.e2e.json"},
+        {"path": "./configs/tsconfig.build.json"},
+        {"path": "./configs/tsconfig.unit.json"},
+        {"path": "./configs/tsconfig.integration.json"},
+        {"path": "./configs/tsconfig.e2e.json"},
     ]
 }

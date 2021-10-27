@@ -1,7 +1,7 @@
 {
     "extends": "./tsconfig.build.json",
     "compilerOptions": {
-        "composite": false,
+        // "composite": false,
         "types": [
             "jest",
             "jest-extended",
@@ -10,7 +10,8 @@
     "include": [
         "src/**/*.ts",
         "**/*.spec.ts",
-        "types/test.d.ts"
+        "__tests__/helpers/**/*.ts",
+        "../types/test.d.ts"
     ],
     "exclude": []
 }

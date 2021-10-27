@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.integration.json",
+    "compilerOptions": {
+    },
+    "include": [
+        "src/**/*.ts",
+        "__tests__/e2e/**/*.ts",
+        "__tests__/helpers/**/*.ts",
+        "../types/test.d.ts"
+    ],
+    "exclude": [
+        "src/**/*.spec.ts",
+    ]
+}
