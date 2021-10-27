@@ -1,4 +1,4 @@
-import { Class, Constructor } from 'type-fest';
+import { Class } from 'type-fest';
 import 'reflect-metadata';
 
 export type OpaqueWrap<T, TSym extends symbol> = {[key in TSym]: T};
@@ -13,10 +13,9 @@ export const notImplemented = ( ..._args: any[] ): never => {
 	throw new Error( 'Not implemented' );
 };
 
-
 type MetaStore<T> = ( proto: any ) => {get: () => T; set: ( v: T ) => void}
-export const metaStoreFactory = <T>( symbol: symbol, defaultIfNotExists: () => T ) =>
-	( proto: Class<any> ): {get: () => T; set: ( v: T ) => void} => {
+export const classMetaStoreFactory = <T>( symbol: symbol, defaultIfNotExists: () => T ): MetaStore<T> =>
+	proto => {
 		const set = ( val: T ) => Reflect.defineMetadata( symbol, val, proto );
 		return {
 			get: () => {
@@ -70,23 +69,4 @@ export const tap = <TArgs extends [void] | any[]>( fn: ( ...args: TArgs ) => voi
 // eslint-disable-next-line no-underscore-dangle
 export const __ = Symbol( 'PLACEHOLDER' );
 
-export type AutoCurryMultiArgs<TArgs extends [void] | any[], TArgsBefore extends any[], TOut> = TArgs extends [...TArgsBefore, infer TArg1, ...infer TArgx] ?
-	& ( TArgx extends [] ?
-		( ( ...args: [...TArgsBefore, TArg1] ) => TOut ) :
-		& ( ( ...args: [...TArgsBefore, TArg1] ) => AutoCurryMultiArgs<TArgx, [], TOut> )
-		& AutoCurryMultiArgs<TArgs, [...TArgsBefore, TArg1], TOut> ):
-	any;
-export type AutoCurry<TArgs extends [void] | any[], TOut> = AutoCurryMultiArgs<TArgs, [], TOut>
-export const autoCurry = <TArgV extends [void] | any[], TOut>(
-	fn: ( ...args: TArgV ) => TOut,
-	curriedArgs = fn.length,
-): AutoCurry<TArgV, TOut> =>
-	( ...args: any ) => {
-		if( args.length === curriedArgs ){
-			return fn( ...args );
-		} else {
-			const newFn = ( ...args2: any ) => fn( ...[ ...args, ...args2 ] as any );
-			Object.defineProperty( newFn, 'length', { value: curriedArgs - args.length } );
-			return autoCurry<any[], TOut>( newFn );
-		}
-	};
+export const isNil = <T>( v: T ): v is T & ( null | undefined ) => typeof v === 'undefined' || v === null;

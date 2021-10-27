@@ -2,6 +2,7 @@ import { Class } from 'type-fest';
 
 import { Numerable, NumerableEntity, NumerableOutputType } from '../../core/query-target/types';
 import { ENumeration } from '../../core/types';
+import { RequestGeneratorRet } from '../context/api/types';
 
 export type QueryOperatorFn<TIn, TOut> = ( arg: TIn ) => TOut;
 
@@ -18,11 +19,14 @@ export interface IQueryContext<
 	readonly output: TOutput;
 	readonly filter?: IQueryContext.Filter;
 	readonly options?: IQueryContext.Options;
+	readonly context?: unknown;
+	readonly mappers: readonly RequestGeneratorRet.PostHook[];
 }
 export namespace IQueryContext {
 	export type Filter = unknown;
 	export type Options = {limit?: number; skip?: number};
 
+	export type Any = IQueryContext<any, any, any, any>;
 	export type FromNumeration<T extends Numerable<any>> = IQueryContext<
 		NumerableEntity<T>,
 		T['numeration'],

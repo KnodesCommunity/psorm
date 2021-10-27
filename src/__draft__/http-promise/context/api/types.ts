@@ -16,8 +16,11 @@ export namespace Descriptor {
 			| 'searchParams'
 			| 'toJSON'>>>;
 }
-export type RequestGeneratorRet = {request: Request; postHooks: unknown[]} | null;
-export type RequestGenerator = ( parentDescriptor: Descriptor, next: RequestGeneratorNextFn ) => RequestGeneratorRet | null;
+export type RequestGeneratorRet = {request: Request; postHooks?: RequestGeneratorRet.PostHook[]};
+export namespace RequestGeneratorRet {
+	export type PostHook = ( outData: unknown ) => Promise<unknown>;
+}
+export type RequestGenerator = ( parentDescriptor: Descriptor, next: RequestGeneratorNextFn ) => RequestGeneratorRet;
 export type RequestGeneratorNextFn = ( desc: Descriptor ) => RequestGeneratorRet;
 export interface IRequestGenerator {
 	readonly generate: RequestGenerator;

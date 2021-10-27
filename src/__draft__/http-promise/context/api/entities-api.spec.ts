@@ -1,15 +1,15 @@
-import { ApiGroup } from './group';
+import { entitiesApi } from './entities-api';
 import { Descriptor } from './types';
 
 class Foo {}
 class Bar extends Foo {}
 
 const mockNext = () => jest.fn( ( ctx: any, n: ( a: any ) => any ) => n( ctx ) );
-describe( 'ApiGroup', () => {
+describe( 'entitiesApi', () => {
 	describe( 'Entity matching', () => {
 		it( 'should match entity', () => {
 			const generator = mockNext();
-			const group = new ApiGroup( {
+			const group = entitiesApi( {
 				[`${Foo}`]: { generate: generator },
 			} );
 			const descriptor: Descriptor = { context: { entityClass: Foo }} as Descriptor as any;
@@ -19,7 +19,7 @@ describe( 'ApiGroup', () => {
 		} );
 		it( 'should match entity with inheritance', () => {
 			const generator = mockNext();
-			const group = new ApiGroup( {
+			const group = entitiesApi( {
 				[`${Foo}`]: { generate: generator },
 			} );
 			const descriptor: Descriptor = { context: { entityClass: Bar }} as Descriptor as any;
@@ -29,7 +29,7 @@ describe( 'ApiGroup', () => {
 		} );
 		it( 'should match entity before inheritance (order 1)', () => {
 			const generators = [ mockNext(), mockNext() ] as const;
-			const group = new ApiGroup( {
+			const group = entitiesApi( {
 				[`${Foo}`]: { generate: generators[1] },
 				[`${Bar}`]: { generate: generators[0] },
 			} );
@@ -43,7 +43,7 @@ describe( 'ApiGroup', () => {
 		} );
 		it( 'should match entity before inheritance (order -1)', () => {
 			const generators = [ mockNext(), mockNext() ] as const;
-			const group = new ApiGroup( {
+			const group = entitiesApi( {
 				[`${Bar}`]: { generate: generators[0] },
 				[`${Foo}`]: { generate: generators[1] },
 			} );
@@ -58,7 +58,7 @@ describe( 'ApiGroup', () => {
 	} );
 	it( 'should call each extensions in sequence', () => {
 		const fns = [ mockNext(), mockNext(), mockNext() ] as const;
-		const group = new ApiGroup().using( ...fns.map( f => ( { generate: f } ) ) );
+		const group = entitiesApi( {} ).using( ...fns.map( f => ( { generate: f } ) ) );
 		const descriptor: Descriptor = { context: {}} as any;
 		expect( () => group.generate( descriptor ) ).toThrowNonStandardMessage();
 		expect( fns[0] ).toHaveBeenCalledTimes( 1 );
@@ -72,7 +72,7 @@ describe( 'ApiGroup', () => {
 	} );
 	it( 'should call entity handler after extensions', () => {
 		const fns = [ mockNext(), mockNext() ] as const;
-		const group = new ApiGroup( {
+		const group = entitiesApi( {
 			[`${Foo}`]: { generate: fns[0] },
 		} ).using( { generate: fns[1] } );
 		const descriptor: Descriptor = { context: { entityClass: Foo }} as Descriptor as any;
@@ -85,7 +85,7 @@ describe( 'ApiGroup', () => {
 	} );
 	it( 'should throw if no match', () => {
 		const fns = [ mockNext(), mockNext() ] as const;
-		const group = new ApiGroup( {
+		const group = entitiesApi( {
 			[`${Foo}`]: { generate: fns[0] },
 		} ).using( { generate: fns[1] } );
 		const descriptor: Descriptor = { context: { entityClass: Foo }} as Descriptor as any;

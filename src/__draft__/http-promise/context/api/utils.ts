@@ -10,3 +10,7 @@ export const extractUrl = ( url: URL ): Descriptor.Url => {
 	const { hash, host, hostname, href, password, pathname, port, protocol, username } = url;
 	return { hash, host, hostname, href, password, pathname, port, protocol, username };
 };
+
+export const exhaustApiMatching = ( desc: Descriptor ) => (): never => {
+	throw new Error( `No suitable RequestGenerator found for ${desc.context?.entityClass?.name}` );
+};

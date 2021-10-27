@@ -1,17 +1,14 @@
 import { expectTypeOf } from 'expect-type';
 import { PromiseValue } from 'type-fest';
 
+import { from, multiple, single } from '../core';
+import { Override } from '../core/utils';
+import { HttpPromiseContext } from './context/context';
 import { include } from './plugins/include/include';
 import { orFail } from './plugins/or-fail';
-import { withPrevNext } from './plugins/with-prev-next';
-
-import { multiple } from '../core/query-target/multiple';
-import { single } from '../core/query-target/single';
-import { from } from './query-components/source/from';
-import { Context } from './query-components/source/types';
+import { withPrevNext } from './plugins/with-prev-next/query-operator';
 import { read } from './read';
 import { ToMany, ToOne } from './relations';
-import { Override } from '../core/utils';
 
 class SimpleEntity {
 	public foo!: string;
@@ -28,7 +25,8 @@ class DeepRelationalEntity {
 	public baz!: string;
 }
 
-const context = {} as Context;
+const context = Object.assign( Object.create( HttpPromiseContext.prototype ), { dispatchDescriptor: jest.fn() } );
+const fakePrevNextMiddleware = {};
 
 describe( 'read', () => {
 	describe( 'Typecheck', () => {
@@ -125,7 +123,7 @@ describe( 'read', () => {
 			describe( 'withPrevNext', () => {
 				describe( 'single', () => {
 					it( 'simple', () => {
-						const readQuery = read( single( SimpleEntity ), from( context ), withPrevNext() );
+						const readQuery = read( single( SimpleEntity ), from( context ), withPrevNext( fakePrevNextMiddleware )() );
 						expectTypeOf( readQuery ).toEqualTypeOf<Promise<{current: SimpleEntity; prev: SimpleEntity | null; next: SimpleEntity | null} | null>>();
 						expectTypeOf( readQuery ).not.toBeAny();
 					} );
@@ -134,7 +132,7 @@ describe( 'read', () => {
 							single( RelationalEntity ),
 							from( context ),
 							include( e => e.relation() ),
-							withPrevNext() );
+							withPrevNext( fakePrevNextMiddleware )() );
 						expectTypeOf( readQuery ).toEqualTypeOf<Promise<{
 							current: Override<RelationalEntity, {relation: SimpleEntity}>;
 							prev: RelationalEntity | null;
@@ -148,6 +146,7 @@ describe( 'read', () => {
 							single( RelationalEntity ),
 							from( context ),
 							withPrevNext(
+								{},
 								include( e => e.relation() ),
 								orFail(),
 							) );
@@ -160,12 +159,12 @@ describe( 'read', () => {
 						expectTypeOf( readQuery ).not.toBeAny();
 					} );
 				} );
-			} );
-			describe( 'multiple', () => {
-				it( 'should not be allowed', () => {
-					const readQuery = read( multiple( SimpleEntity ), from( context ), withPrevNext() );
-					expectTypeOf( readQuery ).toEqualTypeOf<Promise<never>>();
-					expectTypeOf( readQuery ).not.toBeAny();
+				describe( 'multiple', () => {
+					it( 'should not be allowed', () => {
+						const readQuery = read( multiple( SimpleEntity ), from( context ), withPrevNext( fakePrevNextMiddleware ) );
+						expectTypeOf( readQuery ).toEqualTypeOf<Promise<never>>();
+						expectTypeOf( readQuery ).not.toBeAny();
+					} );
 				} );
 			} );
 			describe( 'orFail', () => {
@@ -176,23 +175,25 @@ describe( 'read', () => {
 						expectTypeOf( readQuery ).not.toBeAny();
 					} );
 				} );
-			} );
-			describe( 'multiple', () => {
-				it( 'should not be allowed', () => {
-					const readQuery = read( multiple( SimpleEntity ), from( context ), orFail() );
-					expectTypeOf( readQuery ).toEqualTypeOf<Promise<never>>();
-					expectTypeOf( readQuery ).not.toBeAny();
+				describe( 'multiple', () => {
+					it( 'should not be allowed', () => {
+						const readQuery = read( multiple( SimpleEntity ), from( context ), orFail() );
+						expectTypeOf( readQuery ).toEqualTypeOf<Promise<never>>();
+						expectTypeOf( readQuery ).not.toBeAny();
+					} );
 				} );
 			} );
 			describe( 'withPrevNext & orFail', () => {
-				it( 'simple', () => {
-					const readQuery1 = read( single( SimpleEntity ), from( context ), withPrevNext(), orFail() );
-					expectTypeOf( readQuery1 ).toEqualTypeOf<Promise<{current: SimpleEntity; prev: SimpleEntity | null; next: SimpleEntity | null}>>();
-					expectTypeOf( readQuery1 ).not.toBeAny();
+				describe( 'single', () => {
+					it( 'simple', () => {
+						const readQuery1 = read( single( SimpleEntity ), from( context ), withPrevNext( fakePrevNextMiddleware )(), orFail() );
+						expectTypeOf( readQuery1 ).toEqualTypeOf<Promise<{current: SimpleEntity; prev: SimpleEntity | null; next: SimpleEntity | null}>>();
+						expectTypeOf( readQuery1 ).not.toBeAny();
 
-					const readQuery2 = read( single( SimpleEntity ), from( context ), orFail(), withPrevNext() );
-					expectTypeOf( readQuery2 ).toEqualTypeOf<Promise<{current: SimpleEntity; prev: SimpleEntity | null; next: SimpleEntity | null}>>();
-					expectTypeOf( readQuery2 ).not.toBeAny();
+						const readQuery2 = read( single( SimpleEntity ), from( context ), orFail(), withPrevNext( fakePrevNextMiddleware )() );
+						expectTypeOf( readQuery2 ).toEqualTypeOf<Promise<{current: SimpleEntity; prev: SimpleEntity | null; next: SimpleEntity | null}>>();
+						expectTypeOf( readQuery2 ).not.toBeAny();
+					} );
 				} );
 			} );
 		} );

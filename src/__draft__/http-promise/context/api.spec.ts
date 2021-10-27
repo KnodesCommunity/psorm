@@ -5,8 +5,8 @@ import { Request } from '../../../../__tests__/helpers/polyfills/window';
 import { ENumeration } from '../../core/types';
 import { apiRoot } from './api/api-root';
 import { createRequest } from './api/create-request';
-import { entityToPathOnlyPlural } from './api/entity-to-path-only-plural';
-import { ApiGroup } from './api/group';
+import { entitiesApi } from './api/entities-api';
+import { mapEntityToPath, onlyPluralEndpoint } from './api/entity-to-path-mapper';
 import { filterToQs, jsonToProp, optionsToQs } from './api/to-query-string';
 import { IRequestGenerator } from './api/types';
 
@@ -29,6 +29,7 @@ describe( 'API composition', () => {
 			nullable: true,
 			numeration: ENumeration.SINGLE,
 			output: {} as any,
+			mappers: [],
 		}};
 		const { request, postHooks } = generator.generate( desc, () => {throw new Error( 'Fallback' );} )!;
 		expect( postHooks ).toHaveLength( 1 );
@@ -36,25 +37,25 @@ describe( 'API composition', () => {
 		expect( url.protocol ).toEqual( 'https:' );
 		expect( url.host ).toEqual( 'example.com' );
 		expect( url.pathname ).toEqual( '/rest/foos' );
-		expect( url.searchParams.get( 'q' ) ).toEqual( JSON.stringify( desc.context.filter ) );
-		expect( url.searchParams.get( 'opts' ) ).toEqual( JSON.stringify( { ...desc.context.options, limit: 1 } ) );
+		expect( JSON.parse( url.searchParams.get( 'q' ) ?? 'null' ) ).toEqual( desc.context.filter );
+		expect( JSON.parse( url.searchParams.get( 'opts' ) ?? 'null' ) ).toEqual( { ...desc.context.options, limit: 1 } );
 	};
 	describe( 'Direct match', () => {
 		it( 'should use correctly shared middlewares', () => {
-			const group = new ApiGroup( {
+			const group = entitiesApi( {
 				[`${Foo}`]: createRequest( dom.window as any ),
 			} ).using(
 				apiRoot( 'https://example.com/rest' ),
-				entityToPathOnlyPlural(),
+				mapEntityToPath( onlyPluralEndpoint ),
 				filterToQs( jsonToProp( 'q' ) ),
 				optionsToQs( jsonToProp( 'opts' ) ) );
 			callGroup( Foo, group );
 		} );
 		it( 'should use correctly endpoint middlewares', () => {
-			const group = new ApiGroup( {
-				[`${Foo}`]: new ApiGroup( undefined, [
+			const group = entitiesApi( {
+				[`${Foo}`]: entitiesApi( {}, [
 					apiRoot( 'https://example.com/rest' ),
-					entityToPathOnlyPlural(),
+					mapEntityToPath( onlyPluralEndpoint ),
 					filterToQs( jsonToProp( 'q' ) ),
 					optionsToQs( jsonToProp( 'opts' ) ),
 					createRequest( dom.window as any ),
@@ -65,20 +66,20 @@ describe( 'API composition', () => {
 	} );
 	describe( 'Parent class match', () => {
 		it( 'should use correctly shared middlewares', () => {
-			const group = new ApiGroup( {
+			const group = entitiesApi( {
 				[`${Foo}`]: createRequest( dom.window as any ),
 			} ).using(
 				apiRoot( 'https://example.com/rest' ),
-				entityToPathOnlyPlural(),
+				mapEntityToPath( onlyPluralEndpoint ),
 				filterToQs( jsonToProp( 'q' ) ),
 				optionsToQs( jsonToProp( 'opts' ) ) );
 			callGroup( Bar, group );
 		} );
 		it( 'should use correctly endpoint middlewares', () => {
-			const group = new ApiGroup( {
-				[`${Foo}`]: new ApiGroup( undefined, [
+			const group = entitiesApi( {
+				[`${Foo}`]: entitiesApi( {}, [
 					apiRoot( 'https://example.com/rest' ),
-					entityToPathOnlyPlural(),
+					mapEntityToPath( onlyPluralEndpoint ),
 					filterToQs( jsonToProp( 'q' ) ),
 					optionsToQs( jsonToProp( 'opts' ) ),
 					createRequest( dom.window as any ),

@@ -4,8 +4,8 @@ import { getProtoChain, sortByOther } from '../../../core/utils';
 import { IQueryContext } from '../../plugins/types';
 import { Descriptor, IRequestGenerator, RequestGeneratorNextFn, RequestGeneratorRet } from './types';
 
-export class ApiGroup implements IRequestGenerator {
-	public constructor( private readonly _entitiesMap?: {[key: string]: IRequestGenerator}, private readonly _middlewares: IRequestGenerator[] = [] ) {}
+class EntitiesApiMiddleware implements IRequestGenerator {
+	public constructor( private readonly _entitiesMap: {[key: string]: IRequestGenerator}, private readonly _middlewares: IRequestGenerator[] = [] ) {}
 
 	/**
 	 * @param descriptor
@@ -36,8 +36,8 @@ export class ApiGroup implements IRequestGenerator {
 	/**
 	 * @param middlewares
 	 */
-	public using( ...middlewares: IRequestGenerator[] ): ApiGroup {
-		return new ApiGroup( this._entitiesMap, [ ...middlewares, ...this._middlewares ] );
+	public using( ...middlewares: IRequestGenerator[] ): EntitiesApiMiddleware {
+		return entitiesApi( this._entitiesMap, [ ...middlewares, ...this._middlewares ] );
 	}
 
 	/**
@@ -57,3 +57,4 @@ export class ApiGroup implements IRequestGenerator {
 			.map( ( { generator, entityClass } ) => ( { generator, targetEntity: entityClass } ) );
 	}
 }
+export const entitiesApi = ( entitiesMap: {[key: string]: IRequestGenerator}, middlewares: IRequestGenerator[] = [] ): EntitiesApiMiddleware => new EntitiesApiMiddleware( entitiesMap, middlewares );
